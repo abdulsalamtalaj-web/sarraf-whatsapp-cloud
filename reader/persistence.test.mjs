@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs/promises';import os from 'node:os';import path from 'node:path';
+import {seal,unseal,capture,restore} from './persistence.mjs';
+const secret='test-only-secret-at-least-24-characters';
+test('session encrypted, authenticated and randomized',()=>{const source={auth:{'creds.json':'sensitive-test-value'},currency:{buy:1}};const a=seal(source,secret),b=seal(source,secret);assert.notEqual(a,b);assert(!a.includes('sensitive-test-value'));assert.deepEqual(unseal(a,secret),source);assert.throws(()=>unseal(a,secret+'wrong'));const tampered=JSON.parse(a);tampered.data=Buffer.from('tampered').toString('base64');assert.throws(()=>unseal(JSON.stringify(tampered),secret));});
+test('auth restore rejects traversal and round-trips',async()=>{const dir=await fs.mkdtemp(path.join(os.tmpdir(),'sarraf-test-'));await restore(dir,{'creds.json':'{"ok":true}'});assert.deepEqual(await capture(dir),{'creds.json':'{"ok":true}'});await assert.rejects(restore(dir,{'../escape.json':'bad'}));await fs.rm(dir,{recursive:true,force:true});});

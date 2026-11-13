@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: sarraf-whatsapp-reader
+    runtime: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /health
+    envVars:
+      - key: STORE_URL
+        sync: false
+      - key: STORE_TOKEN
+        sync: false
+      - key: SESSION_KEY
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        generateValue: true

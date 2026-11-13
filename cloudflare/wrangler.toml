@@ -1,0 +1,13 @@
+name = "sarraf-whatsapp-store"
+main = "worker.mjs"
+compatibility_date = "2026-11-13"
+workers_dev = true
+
+[triggers]
+crons = ["*/2 * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sarraf-whatsapp"
+database_id = "3a8a89c9-9260-4040-9847-66924fa54a25"
+
